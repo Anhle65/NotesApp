@@ -62,7 +62,6 @@ fun CreateNote(navController: NavController) {
                 builder.setMessage("Created note: \"${note}\"\nNext lab we'll look into saving things with proper state")
                     .setCancelable(false)
                     .setPositiveButton("Ok") { dialog, id -> /* Run some code on click */
-                        // We're not looking into state this lab so we won't actually save the new Note
                         navController.navigate("noteList")
                     }
                     .setNegativeButton("Cancel") { dialog, id ->

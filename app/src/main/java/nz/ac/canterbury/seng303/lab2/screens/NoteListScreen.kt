@@ -77,10 +77,7 @@ fun NoteItem(navController: NavController, note: Note) {
                 .fillMaxWidth()
         ) {
             IconButton(onClick = {
-                /* We're not looking into state this lab so we won't actually edit anything,
-                 though you may want to think about how you could re-use the CreateNote composable
-                  (or at least what common functionality you could abstract) for editing */
-                Toast.makeText(context, "Can't do that just yet! we'll learn to handle state next lab", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Can't do that just yet! we'll learn to handle state in this lab", Toast.LENGTH_SHORT).show()
             }) {
                 Icon(
                     imageVector = Icons.Outlined.Edit,
@@ -93,8 +90,7 @@ fun NoteItem(navController: NavController, note: Note) {
                 builder.setMessage("Delete note: \"${note.title}\"?")
                     .setCancelable(false)
                     .setPositiveButton("Delete") { dialog, id ->
-                        // We're not looking into state this lab so we won't actually delete anything
-                        Toast.makeText(context, "Can't do that just yet! we'll learn to handle state next lab", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Can't do that just yet! we'll learn to handle state this lab", Toast.LENGTH_SHORT).show()
                         dialog.dismiss()
                     }
                     .setNegativeButton("Cancel") { dialog, id ->
