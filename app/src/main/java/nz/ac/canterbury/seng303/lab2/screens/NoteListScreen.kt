@@ -1,5 +1,6 @@
 package nz.ac.canterbury.seng303.lab2.screens
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.widget.Toast
 import androidx.compose.foundation.clickable
@@ -19,6 +20,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,11 +31,14 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import nz.ac.canterbury.seng303.lab2.models.Note
 import nz.ac.canterbury.seng303.lab2.util.convertTimestampToReadableTime
-
+import nz.ac.canterbury.seng303.lab2.viewmodels.NoteViewModel
 @Composable
-fun NoteList(navController: NavController) {
+fun NoteList(navController: NavController, noteViewModel: NoteViewModel)
+{
+    noteViewModel.getNotes()
+    val notes: List<Note> by noteViewModel.notes.collectAsState(emptyList())
     LazyColumn {
-        items(Note.getNotes()) { note ->
+        items(notes) { note ->
             NoteItem(navController = navController, note = note)
             Divider() // Add a divider between items
         }

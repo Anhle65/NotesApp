@@ -9,27 +9,34 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import nz.ac.canterbury.seng303.lab2.models.Note
 import nz.ac.canterbury.seng303.lab2.util.convertTimestampToReadableTime
+import nz.ac.canterbury.seng303.lab2.viewmodels.NoteViewModel
 
 @Composable
-fun NoteCard(noteId: String) {
-    val note: Note = Note.getNotes().first { note -> note.id == noteId.toInt() }
+fun NoteCard(noteId: String, noteViewModel: NoteViewModel) {
+//    val note: Note = Note.getNotes().first { note -> note.id == noteId.toInt() }
+    noteViewModel.getNoteById(noteId = noteId.toIntOrNull())
+    val selectedNoteState by noteViewModel.selectedNote.collectAsState(null)
+    val note: Note? = selectedNoteState
     Column(
         modifier = Modifier
             .padding(16.dp)
             .fillMaxWidth()
     ) {
-        Text(text = "Title: ${note.title}", style = MaterialTheme.typography.headlineMedium)
-        Divider(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f)
+        if (note != null) {
+            Text(text = "Title: ${note.title}", style = MaterialTheme.typography.headlineMedium)
+            Divider(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f)
         )
         Text(
             text = "Content:",
@@ -66,6 +73,9 @@ fun NoteCard(noteId: String) {
                 onCheckedChange = null, // No click event
                 enabled = false // Make the checkbox disabled
             )
+        }
+        } else {
+            Text(text = "Could not find note: $noteId", style = MaterialTheme.typography.headlineMedium)
         }
     }
 }
