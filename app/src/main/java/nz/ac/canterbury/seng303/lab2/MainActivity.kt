@@ -20,6 +20,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -31,11 +32,16 @@ import nz.ac.canterbury.seng303.lab2.screens.NoteCard
 import nz.ac.canterbury.seng303.lab2.screens.NoteGrid
 import nz.ac.canterbury.seng303.lab2.screens.NoteList
 import nz.ac.canterbury.seng303.lab2.ui.theme.Lab2Theme
+import nz.ac.canterbury.seng303.lab2.viewmodels.CreateNoteViewModel
+import nz.ac.canterbury.seng303.lab2.viewmodels.NoteViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel as koinViewModel
 
 class MainActivity : ComponentActivity() {
+    private val noteViewModel: NoteViewModel by koinViewModel()
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        noteViewModel.loadDefaultNotesIfNoneExist()
         setContent {
             Lab2Theme {
                 val navController = rememberNavController()
@@ -67,16 +73,23 @@ class MainActivity : ComponentActivity() {
                                 })
                             ) { backStackEntry ->
                                 val noteId = backStackEntry.arguments?.getString("noteId")
-                                noteId?.let { noteIdParam: String -> NoteCard(noteIdParam) }
-                            }
-                            composable("NoteList") {
-                                NoteList(navController)
+                                noteId?.let { noteIdParam: String -> NoteCard(noteIdParam, noteViewModel) }
                             }
                             composable("NoteGrid") {
                                 NoteGrid(navController)
                             }
                             composable("CreateNote") {
-                                CreateNote(navController = navController)
+                                val createNoteViewModel: CreateNoteViewModel = viewModel()
+                                CreateNote(navController = navController, title = createNoteViewModel.title,
+                                    onTitleChange = { newTitle ->
+                                        val title = newTitle.replace("badword", "*******")
+                                        createNoteViewModel.updateTitle(title)},
+                                    content = createNoteViewModel.content, onContentChange = {
+                                        newContent -> createNoteViewModel.updateContent(newContent)},
+                                    createNoteFn = {title, content -> noteViewModel.createNote(title, content)})
+                            }
+                            composable("NoteList") {
+                                NoteList(navController, noteViewModel)
                             }
                         }
                     }
