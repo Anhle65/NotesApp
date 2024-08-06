@@ -68,4 +68,10 @@ class NoteViewModel(private val noteStorage: Storage<Note>): ViewModel() {
             noteStorage.delete(noteId)
         }
     }
+
+    fun editNote(noteId: Int, note: Note) = viewModelScope.launch {
+        noteStorage.edit(noteId, note).collect()
+        noteStorage.getAll().catch { Log.e("NOTE_VIEW_MODEL", it.toString()) }
+            .collect { _notes.emit(it) }
+    }
 }

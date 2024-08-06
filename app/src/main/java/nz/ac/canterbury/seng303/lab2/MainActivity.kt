@@ -28,11 +28,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import nz.ac.canterbury.seng303.lab2.screens.CreateNote
+import nz.ac.canterbury.seng303.lab2.screens.EditNote
 import nz.ac.canterbury.seng303.lab2.screens.NoteCard
 import nz.ac.canterbury.seng303.lab2.screens.NoteGrid
 import nz.ac.canterbury.seng303.lab2.screens.NoteList
 import nz.ac.canterbury.seng303.lab2.ui.theme.Lab2Theme
 import nz.ac.canterbury.seng303.lab2.viewmodels.CreateNoteViewModel
+import nz.ac.canterbury.seng303.lab2.viewmodels.EditNoteViewModel
 import nz.ac.canterbury.seng303.lab2.viewmodels.NoteViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel as koinViewModel
 
@@ -90,6 +92,21 @@ class MainActivity : ComponentActivity() {
                             }
                             composable("NoteList") {
                                 NoteList(navController, noteViewModel)
+                            }
+                            composable(
+                                "EditNote/{noteId}",
+                                arguments = listOf(navArgument("noteId") {
+                                    type = NavType.StringType
+                                })
+                            ) {
+                                backStackEntry ->
+                                val editNoteViewModel: EditNoteViewModel = viewModel()
+                                val noteId = backStackEntry.arguments?.getString("noteId")
+                                noteId?.let { noteIdParam: String -> EditNote(navController = navController,
+                                    noteId = noteId,
+                                    editNoteViewModel = editNoteViewModel,
+                                    noteViewModel = noteViewModel
+                                )}
                             }
                         }
                     }

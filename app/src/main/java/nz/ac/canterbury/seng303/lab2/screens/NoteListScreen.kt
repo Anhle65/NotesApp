@@ -83,7 +83,15 @@ fun NoteItem(navController: NavController, note: Note) {
                 .fillMaxWidth()
         ) {
             IconButton(onClick = {
-                Toast.makeText(context, "Can't do that just yet! we'll learn to handle state in this lab", Toast.LENGTH_SHORT).show()
+                navController.navigate("EditNote/${note.id}")
+//                EditNote(
+//                    navController = ,
+//                    onTitleChange = ,
+//                    onContentChange = ,
+//                    editNoteFn = ,
+//                    note = note
+//                )
+//                Toast.makeText(context, "Can't do that just yet! we'll learn to handle state in this lab", Toast.LENGTH_SHORT).show()
             }) {
                 Icon(
                     imageVector = Icons.Outlined.Edit,
@@ -96,7 +104,8 @@ fun NoteItem(navController: NavController, note: Note) {
                 builder.setMessage("Delete note: \"${note.title}\"?")
                     .setCancelable(false)
                     .setPositiveButton("Delete") { dialog, id ->
-                        Toast.makeText(context, "Can't do that just yet! we'll learn to handle state this lab", Toast.LENGTH_SHORT).show()
+//                        navController.navigate("CreateNote")
+//                        Toast.makeText(context, "Can't do that just yet! we'll learn to handle state this lab", Toast.LENGTH_SHORT).show()
                         dialog.dismiss()
                     }
                     .setNegativeButton("Cancel") { dialog, id ->
