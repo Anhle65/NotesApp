@@ -56,17 +56,17 @@ class NoteViewModel(private val noteStorage: Storage<Note>): ViewModel() {
                 timestamp = System.currentTimeMillis(),
                 false
             )
-            noteStorage.insert(note).catch { Log.e("NOTE_VIEW_MODEL", "Could not insert note") }
+            noteStorage.insert(note).catch { Log.e("NOTE_VIEW_MODEL", "Could not create note") }
                 .collect()
             noteStorage.getAll().catch { Log.e("NOTE_VIEW_MODEL", it.toString()) }
                 .collect { _notes.emit(it) }
         }
 
-
-    fun deleteNote(noteId: Int?) = viewModelScope.launch {
-        if (noteId != null) {
-            noteStorage.delete(noteId)
-        }
+    fun deleteNote(noteId: Int) = viewModelScope.launch {
+        Log.d("NOTE_VIEW_MODEL", "Edit note: $noteId")
+        noteStorage.delete(noteId).catch { Log.e("NOTE_VIEW_MODEL", "Could not delete note") }.collect()
+        noteStorage.getAll().catch { Log.e("NOTE_VIEW_MODEL", it.toString()) }
+            .collect { _notes.emit(it) }
     }
 
     fun editNote(noteId: Int, note: Note) = viewModelScope.launch {
