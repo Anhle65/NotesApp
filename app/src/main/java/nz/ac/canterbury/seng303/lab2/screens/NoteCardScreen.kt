@@ -11,12 +11,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import nz.ac.canterbury.seng303.lab2.models.Note
 import nz.ac.canterbury.seng303.lab2.util.convertTimestampToReadableTime
+import nz.ac.canterbury.seng303.lab2.viewmodels.EditNoteViewModel
 import nz.ac.canterbury.seng303.lab2.viewmodels.NoteViewModel
 
 @Composable
@@ -25,6 +29,7 @@ fun NoteCard(noteId: String, noteViewModel: NoteViewModel) {
     noteViewModel.getNoteById(noteId = noteId.toIntOrNull())
     val selectedNoteState by noteViewModel.selectedNote.collectAsState(null)
     val note: Note? = selectedNoteState
+
     Column(
         modifier = Modifier
             .padding(16.dp)
@@ -58,22 +63,26 @@ fun NoteCard(noteId: String, noteViewModel: NoteViewModel) {
                 modifier = Modifier
             )
         }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "Archived: ",
-                style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold)
-            )
-            Checkbox(
-                checked = note.isArchived,
-                onCheckedChange = null, // No click event
-                enabled = false // Make the checkbox disabled
-            )
-        }
+            var checked by remember { mutableStateOf(note.isArchived) }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Archived: ",
+                    style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold)
+                )
+                Checkbox(
+                    checked = checked,
+                    onCheckedChange = {checked =it
+                        noteViewModel.editNote(noteId = note.id, Note(noteId.toInt(), note.title, note.content, timestamp = note.timestamp, checked)
+                        ) }, // No click event
+                    enabled = true // Make the checkbox disabled
+                )
+
+            }
         } else {
             Text(text = "Could not find note: $noteId", style = MaterialTheme.typography.headlineMedium)
         }
