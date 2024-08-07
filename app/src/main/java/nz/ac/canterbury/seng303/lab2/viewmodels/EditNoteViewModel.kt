@@ -18,4 +18,11 @@ class EditNoteViewModel: ViewModel() {
     fun updateContent(newContent: String) {
         content = newContent
     }
+
+    var isArchived by mutableStateOf(false)
+        private set
+
+    fun updateArchived(newState: Boolean) {
+        isArchived = newState;
+    }
 }
