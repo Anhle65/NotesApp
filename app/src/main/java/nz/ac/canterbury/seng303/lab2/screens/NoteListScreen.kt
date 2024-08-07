@@ -20,6 +20,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -39,14 +40,15 @@ fun NoteList(navController: NavController, noteViewModel: NoteViewModel)
     val notes: List<Note> by noteViewModel.notes.collectAsState(emptyList())
     LazyColumn {
         items(notes) { note ->
-            NoteItem(navController = navController, note = note)
+            NoteItem(navController = navController, note = note,
+                deleteNoteFn = {id: Int -> noteViewModel.deleteNote(id)})
             Divider() // Add a divider between items
         }
     }
 }
 
 @Composable
-fun NoteItem(navController: NavController, note: Note) {
+fun NoteItem(navController: NavController, note: Note, deleteNoteFn: (id: Int) -> Unit) {
     val context = LocalContext.current
     Row(
         modifier = Modifier
@@ -84,15 +86,8 @@ fun NoteItem(navController: NavController, note: Note) {
         ) {
             IconButton(onClick = {
                 navController.navigate("EditNote/${note.id}")
-//                EditNote(
-//                    navController = ,
-//                    onTitleChange = ,
-//                    onContentChange = ,
-//                    editNoteFn = ,
-//                    note = note
-//                )
-//                Toast.makeText(context, "Can't do that just yet! we'll learn to handle state in this lab", Toast.LENGTH_SHORT).show()
-            }) {
+            })
+            {
                 Icon(
                     imageVector = Icons.Outlined.Edit,
                     contentDescription = "Edit",
@@ -104,7 +99,7 @@ fun NoteItem(navController: NavController, note: Note) {
                 builder.setMessage("Delete note: \"${note.title}\"?")
                     .setCancelable(false)
                     .setPositiveButton("Delete") { dialog, id ->
-//                        navController.navigate("CreateNote")
+                        deleteNoteFn(note.id)
 //                        Toast.makeText(context, "Can't do that just yet! we'll learn to handle state this lab", Toast.LENGTH_SHORT).show()
                         dialog.dismiss()
                     }
