@@ -75,14 +75,16 @@ fun EditNote (navController: NavController,
 //                    content,
 //                    System.currentTimeMillis(),
 //                    false)
-                noteViewModel.editNote(noteId = noteId.toInt(), Note(noteId.toInt(), editNoteViewModel.title, editNoteViewModel.content, timestamp = System.currentTimeMillis(), false))
+                noteViewModel.editNote(noteId = noteId.toInt(), Note(noteId.toInt(), editNoteViewModel.title, editNoteViewModel.content, timestamp = System.currentTimeMillis(), editNoteViewModel.isArchived))
                 val builder = AlertDialog.Builder(context)
-                builder.setMessage("Edit note: ")
-                    .setCancelable(false)
-                    .setPositiveButton("Ok") { dialog, id -> /* Run some code on click */
-                        navController.navigate("noteList")
+                if (note != null) {
+                    builder.setMessage("Edit note: ${note.title}")
+                        .setCancelable(false)
+                        .setPositiveButton("Ok") { dialog, id -> /* Run some code on click */
+                            navController.navigate("noteList")
 
-                    }
+                        }
+                }
 //                    .setNegativeButton("Cancel") { dialog, id ->
 //                        // Dismiss the dialog
 //                        dialog.dismiss()
