@@ -17,6 +17,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,15 +30,18 @@ import androidx.navigation.NavController
 import nz.ac.canterbury.seng303.lab2.R
 import nz.ac.canterbury.seng303.lab2.models.Note
 import nz.ac.canterbury.seng303.lab2.util.convertTimestampToReadableTime
+import nz.ac.canterbury.seng303.lab2.viewmodels.NoteViewModel
 
 @Composable
-fun NoteGrid(navController: NavController) {
+fun NoteGrid(navController: NavController, noteViewModel: NoteViewModel) {
+    noteViewModel.getNotes()
+    val notes: List<Note> by noteViewModel.notes.collectAsState(emptyList())
     LazyVerticalGrid(
         columns = GridCells.Fixed(2), // Specify the number of columns in the grid
         contentPadding = PaddingValues(4.dp, 8.dp),
         modifier = Modifier.background(Color.LightGray)
     ) {
-        items(Note.getNotes()) { note ->
+        items(notes) { note ->
             NoteGridItem(navController = navController, note = note)
         }
     }
