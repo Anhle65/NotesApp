@@ -45,6 +45,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         noteViewModel.loadDefaultNotesIfNoneExist()
         setContent {
+            val editNoteViewModel: EditNoteViewModel = viewModel()
             Lab2Theme {
                 val navController = rememberNavController()
                 Scaffold(
@@ -75,10 +76,10 @@ class MainActivity : ComponentActivity() {
                                 })
                             ) { backStackEntry ->
                                 val noteId = backStackEntry.arguments?.getString("noteId")
-                                noteId?.let { noteIdParam: String -> NoteCard(noteIdParam, noteViewModel) }
+                                noteId?.let { noteIdParam: String -> NoteCard(noteIdParam, noteViewModel, editNoteViewModel) }
                             }
                             composable("NoteGrid") {
-                                NoteGrid(navController)
+                                NoteGrid(navController, noteViewModel)
                             }
                             composable("CreateNote") {
                                 val createNoteViewModel: CreateNoteViewModel = viewModel()
@@ -100,7 +101,6 @@ class MainActivity : ComponentActivity() {
                                 })
                             ) {
                                 backStackEntry ->
-                                val editNoteViewModel: EditNoteViewModel = viewModel()
                                 val noteId = backStackEntry.arguments?.getString("noteId")
                                 noteId?.let { noteIdParam: String -> EditNote(navController = navController,
                                     noteId = noteId,
