@@ -76,7 +76,7 @@ class MainActivity : ComponentActivity() {
                                 })
                             ) { backStackEntry ->
                                 val noteId = backStackEntry.arguments?.getString("noteId")
-                                noteId?.let { noteIdParam: String -> NoteCard(noteIdParam, noteViewModel, editNoteViewModel) }
+                                noteId?.let { noteIdParam: String -> NoteCard(noteIdParam, noteViewModel) }
                             }
                             composable("NoteGrid") {
                                 NoteGrid(navController, noteViewModel)
