@@ -87,7 +87,8 @@ class MainActivity : ComponentActivity() {
                                     onTitleChange = { newTitle ->
                                         val title = newTitle.replace("badword", "*******")
                                         createNoteViewModel.updateTitle(title)},
-                                    content = createNoteViewModel.content, onContentChange = {
+                                    content = createNoteViewModel.content,
+                                    onContentChange = {
                                         newContent -> createNoteViewModel.updateContent(newContent)},
                                     createNoteFn = {title, content -> noteViewModel.createNote(title, content)})
                             }
@@ -102,7 +103,8 @@ class MainActivity : ComponentActivity() {
                             ) {
                                 backStackEntry ->
                                 val noteId = backStackEntry.arguments?.getString("noteId")
-                                noteId?.let { noteIdParam: String -> EditNote(navController = navController,
+                                noteId?.let {
+                                    EditNote(navController = navController,
                                     noteId = noteId,
                                     editNoteViewModel = editNoteViewModel,
                                     noteViewModel = noteViewModel

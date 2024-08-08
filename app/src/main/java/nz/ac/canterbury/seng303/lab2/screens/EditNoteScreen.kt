@@ -1,6 +1,7 @@
 package nz.ac.canterbury.seng303.lab2.screens
 
 import android.app.AlertDialog
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -75,23 +76,22 @@ fun EditNote (navController: NavController,
 //                    content,
 //                    System.currentTimeMillis(),
 //                    false)
-                noteViewModel.editNote(noteId = noteId.toInt(), Note(noteId.toInt(), editNoteViewModel.title, editNoteViewModel.content, timestamp = System.currentTimeMillis(), editNoteViewModel.isArchived))
                 val builder = AlertDialog.Builder(context)
-                if (note != null) {
-                    builder.setMessage("Edit note: ${note.title}")
-                        .setCancelable(false)
+                if (note != null && editNoteViewModel.title != "" && editNoteViewModel.content != "") {
+                    builder.setMessage("Edit note: ${note.title} to ${editNoteViewModel.title}")
                         .setPositiveButton("Ok") { dialog, id -> /* Run some code on click */
+                            noteViewModel.editNote(noteId = noteId.toInt(), Note(noteId.toInt(), editNoteViewModel.title, editNoteViewModel.content, timestamp = System.currentTimeMillis(), editNoteViewModel.isArchived))
                             navController.navigate("noteList")
-
                         }
+                        .setNegativeButton("Cancel") { dialog, id ->
+                            // Dismiss the dialog
+                            dialog.dismiss()
+                        }
+                    val alert = builder.create()
+                    alert.show()
+                } else {
+                    Toast.makeText(context,"Could not edit a note with empty title or content", Toast.LENGTH_SHORT).show()
                 }
-//                    .setNegativeButton("Cancel") { dialog, id ->
-//                        // Dismiss the dialog
-//                        dialog.dismiss()
-//                    }
-                val alert = builder.create()
-                alert.show()
-
             },
             modifier = Modifier
                 .fillMaxWidth()
